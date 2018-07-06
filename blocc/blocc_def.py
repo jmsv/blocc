@@ -1,15 +1,8 @@
 import hashlib
 import json
 from datetime import datetime
-from random import randint
 
-
-def enc(thingy):
-    if isinstance(thingy, bytes):
-        return thingy
-
-    return str(thingy).encode('utf-8')
-
+from .misc import byte_me
 
 
 class Blocc:
@@ -17,11 +10,11 @@ class Blocc:
         self.timestamp = datetime.now().isoformat()
 
         if isinstance(prev, Blocc):
-            self.prev = prev
+            self.prev = prev.hash
             self.index = prev.index + 1
             assert self.timestamp > prev.timestamp
         elif prev is None:
-            self.prev = prev
+            self.prev = None
             self.index = 0
 
         self.data = data
@@ -36,10 +29,10 @@ class Blocc:
 
     def blocc_hash(self):
         return hashlib.sha256(
-            enc(self.index) +
-            enc(self.timestamp) +
-            enc(self.data_json) +
-            enc(self.prev)
+            byte_me(self.index) +
+            byte_me(self.timestamp) +
+            byte_me(self.data_json) +
+            byte_me(self.prev)
         ).hexdigest()
 
     def toJSON(self):
@@ -51,19 +44,3 @@ class Blocc:
 
     def __repr__(self):
         return self.toJSON()
-
-
-if __name__ == '__main__':
-    bloccchain = [Blocc({'message': 'lol'}, None)]
-
-    for _ in range(3):
-        bloccchain.append(
-            Blocc(
-                {
-                    'random': randint(0, 9999)
-                }, bloccchain[-1]
-            )
-        )
-        print('Added blocc #%d' % bloccchain[-1].index)
-
-    print(bloccchain[-1])
