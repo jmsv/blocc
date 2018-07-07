@@ -1,5 +1,5 @@
 make:
-	python -m blocc
+	@python -m blocc
 
 test:
 	flake8

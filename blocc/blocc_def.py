@@ -18,14 +18,17 @@ class Blocc:
             self.index = 0
 
         self.data = data
-
-        # Check data is JSON serializable
-        try:
-            self.data_json = json.dumps(data)
-        except TypeError as e:
-            raise e
+        assert isinstance(self.data_json, str)
 
         self.hash = self.blocc_hash()
+
+    @property
+    def data_json(self):
+        # Check data is JSON serializable
+        try:
+            return json.dumps(self.data)
+        except TypeError as e:
+            raise e
 
     def blocc_hash(self):
         return hashlib.sha256(
@@ -35,12 +38,11 @@ class Blocc:
             byte_me(self.prev)
         ).hexdigest()
 
-    def toJSON(self):
-        return json.dumps(
-            self,
-            default=lambda o: o.__dict__,
-            indent=4
-        )
+    def json(self, pretty=False):
+        if pretty:
+            return json.dumps(self, default=lambda o: o.__dict__, indent=4)
+        else:
+            return json.dumps(self, default=lambda o: o.__dict__)
 
     def __repr__(self):
-        return self.toJSON()
+        return self.json(pretty=True)
