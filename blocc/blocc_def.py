@@ -38,11 +38,13 @@ class Blocc:
             byte_me(self.prev)
         ).hexdigest()
 
-    def json(self, pretty=False):
-        if pretty:
-            return json.dumps(self, default=lambda o: o.__dict__, indent=4)
-        else:
-            return json.dumps(self, default=lambda o: o.__dict__)
+    @property
+    def cereal(self):
+        return json.loads(json.dumps(self, default=lambda o: o.__dict__))
+
+    @property
+    def json(self):
+        return json.dumps(self.cereal, indent=4)
 
     def __repr__(self):
-        return self.json(pretty=True)
+        return self.json
