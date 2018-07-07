@@ -24,7 +24,8 @@ class Bloccchain():
 
     @property
     def cereal(self):
-        return json.loads(json.dumps(self.__chain, default=lambda o: o.__dict__))
+        return json.loads(json.dumps(
+            self.__chain, default=lambda o: o.__dict__))
 
     @property
     def json(self):

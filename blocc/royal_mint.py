@@ -12,7 +12,7 @@ class RoyalMint:
                    incrementor % self.latest_proof == 0):
             incrementor += 1
         self.latest_proof = incrementor
-        return incrementorgit 
+        return incrementor
 
     def mint(self, minter, transactions):
         new_proof = self.pow()
